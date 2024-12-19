@@ -28,6 +28,13 @@ android {
     namespace "cl.ceisufro.fluttersensors"
     compileSdkVersion 31
 
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
     }
