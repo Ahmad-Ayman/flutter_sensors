@@ -3,22 +3,19 @@ package cl.ceisufro.fluttersensors
 import android.content.Context
 import android.hardware.SensorManager
 import io.flutter.embedding.engine.plugins.FlutterPlugin
-import io.flutter.plugin.common.*
+import io.flutter.plugin.common.BinaryMessenger
+import io.flutter.plugin.common.EventChannel
+import io.flutter.plugin.common.MethodCall
+import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
+import io.flutter.plugin.common.MethodChannel.Result
 
-
-class FlutterSensorsPlugin() : FlutterPlugin, MethodCallHandler {
+class FlutterSensorsPlugin : FlutterPlugin, MethodCallHandler {
     private var eventChannels = hashMapOf<Int, EventChannel>()
     private var streamHandlers = hashMapOf<Int, SensorStreamHandler>()
     private lateinit var context: Context
     private lateinit var messenger: BinaryMessenger
     private lateinit var sensorManager: SensorManager
-
-    constructor(context: Context, binaryMessenger: BinaryMessenger) : this() {
-        this.context = context
-        this.messenger = binaryMessenger
-        this.sensorManager = context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
-    }
 
     override fun onAttachedToEngine(binding: FlutterPlugin.FlutterPluginBinding) {
         val methodChannel = MethodChannel(binding.binaryMessenger, CHANNEL_NAME)
@@ -30,20 +27,6 @@ class FlutterSensorsPlugin() : FlutterPlugin, MethodCallHandler {
 
     companion object {
         private const val CHANNEL_NAME = "flutter_sensors"
-
-        @Suppress("deprecation")
-        @JvmStatic
-        fun registerWith(registrar: PluginRegistry.Registrar) {
-            val methodChannel = MethodChannel(registrar.messenger(), CHANNEL_NAME)
-            val context = registrar.context()
-            val binaryMessenger = registrar.messenger()
-            val plugin = FlutterSensorsPlugin(context, binaryMessenger)
-            methodChannel.setMethodCallHandler(plugin)
-            registrar.addViewDestroyListener {
-                plugin.onDestroy()
-                false
-            }
-        }
     }
 
     override fun onDetachedFromEngine(p0: FlutterPlugin.FlutterPluginBinding) {
